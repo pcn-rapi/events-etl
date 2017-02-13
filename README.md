@@ -41,8 +41,9 @@ or
 
 ## Indivisible 
 
-| - | - |
+
 | key | description |
+|--- |--- |
 | `INDIVISIBLE_API_KEY` | API for the OSDI Indivisible key |
 | `INDIVISIBLE_ACTION_URL` | API Endpoint for the Indivisible Actions |
 | `INDIVISIBLE_TEAM_MEETING_URL` | API Endpoint for the Indivisible Team Meetings |
