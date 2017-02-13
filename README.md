@@ -41,6 +41,7 @@ or
 
 ## Indivisible 
 
+| - | - |
 | key | description |
 |- |- |
 | `INDIVISIBLE_API_KEY` | API for the OSDI Indivisible key |
