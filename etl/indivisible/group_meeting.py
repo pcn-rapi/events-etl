@@ -7,7 +7,12 @@ OSDI_MAX_DATA_PER_PAGE = 25
 UNNECESSARY_ELEMENTS = ['identifiers','created_date','reminders','action_network:event_campaign_id', \
 '_links', 'modified_date', 'status', 'transparence', 'visibility', 'guests_can_invite_others', \
 'origin_system', 'action_network:hidden', 'instructions', 'description']
+SUPER_GROUP = 'Indivisible'
 
+#Headers
+_TITLE = 'title'
+_URL = 'browser_url'
+_STARTDATE = 'start_date'
 
 def save():
     cleaned_data = retrieve_and_clean_data()
@@ -30,40 +35,40 @@ def retrieve_and_clean_data():
     cleaned_data = []
     
     # traverse the OSDI – only has 1
-    # while has_content:
-    req = requests.get(event_endpoint, data={'page': page}, headers={"OSDI-API-Token": event_api_key})
-    if (req.status_code == 200):
-        json_data = json.loads(req.text)
-        osdi_events = json_data['_embedded']['osdi:events']
-        
-        has_more_content = len(osdi_events) == OSDI_MAX_DATA_PER_PAGE
-        
-        
-        
-        for event in osdi_events:
-            # remove private data
+    while has_more_content:
+        req = requests.get(event_endpoint, data={'page': page}, headers={"OSDI-API-Token": event_api_key})
+        page = page + 1
+        if (req.status_code == 200):
+            json_data = json.loads(req.text)
+            osdi_events = json_data['_embedded']['osdi:events']
             
-            if event["action_network:hidden"]:
-                next
+            has_more_content = len(osdi_events) == OSDI_MAX_DATA_PER_PAGE
+            
+            for event in osdi_events:
+                # remove private data
                 
-            for unneeded_key in UNNECESSARY_ELEMENTS:
-                if unneeded_key in event:
-                    del event[unneeded_key]
+                if event["action_network:hidden"]:
+                    next
+                    
+                for unneeded_key in UNNECESSARY_ELEMENTS:
+                    if unneeded_key in event:
+                        del event[unneeded_key]
+                
+                #specifics but not group
+                del event['_embedded']['osdi:organizer']
+                del event['_embedded']['osdi:creator']['given_name']
+                del event['_embedded']['osdi:creator']['family_name']
+                del event['_embedded']['osdi:creator']['identifiers']
+                del event['_embedded']['osdi:creator']['postal_addresses']
+                del event['_embedded']['osdi:creator']['_links']
+                
+                # print(json.dumps(event))
+                # print("\n\n")
             
-            #specifics but not group
-            del event['_embedded']['osdi:organizer']
-            del event['_embedded']['osdi:creator']['given_name']
-            del event['_embedded']['osdi:creator']['family_name']
-            del event['_embedded']['osdi:creator']['identifiers']
-            del event['_embedded']['osdi:creator']['postal_addresses']
-            del event['_embedded']['osdi:creator']['_links']
+                cleaned_data.append(event)
             
-            # print(json.dumps(event))
-            # print("\n\n")
-        
-            cleaned_data.append(event)
-        
-        # will continue to traverse if has more content
+            # will continue to traverse if has more content
+    #endof while has content
         
     return cleaned_data
 
@@ -73,20 +78,21 @@ def translate_data(cleaned_data):
     This is where we translate the data to the necessary information for the map
     """
     translated_data = []
-    _TITLE = 'title'
-    _URL = 'browser_url'
-    _STARTDATE = 'start_date'
-    SUPER_GROUP = 'Indivisible'
     
     for data in cleaned_data:
         address = clean_venue(data['location'])
         group_name = data['_embedded']['osdi:creator']['custom_fields']['Group Name'] if 'Group Name' in data['_embedded']['osdi:creator']['custom_fields'] else None
         has_coords = 'location' in data['location']
+        
+        if not has_coords:
+            next
+            
         event = {
             'title': data[_TITLE] if _TITLE in data else None, 
             'url': data[_URL] if _URL in data else None,
             'supergroup' : SUPER_GROUP,
             'group': group_name,
+            'event_type': 'Group Meeting',
             'start_datetime': data[_STARTDATE] if _STARTDATE in data else None,
             'venue': address,
             'lat': data['location']['location']['latitude'] if has_coords else None,
