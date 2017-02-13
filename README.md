@@ -36,3 +36,13 @@ $ heroku open
 or
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
+# Setting Up ETL
+
+## Indivisible 
+
+| key | description |
+|- |- |
+| `INDIVISIBLE_API_KEY` | API for the OSDI Indivisible key |
+| `INDIVISIBLE_ACTION_URL` | API Endpoint for the Indivisible Actions |
+| `INDIVISIBLE_TEAM_MEETING_URL` | API Endpoint for the Indivisible Team Meetings |
