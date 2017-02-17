@@ -1,6 +1,7 @@
 import os
 import requests
 import json
+import datetime
 
 #const 
 OSDI_MAX_DATA_PER_PAGE = 25
@@ -8,6 +9,7 @@ UNNECESSARY_ELEMENTS = ['identifiers','created_date','reminders','action_network
 '_links', 'modified_date', 'status', 'transparence', 'visibility', 'guests_can_invite_others', \
 'origin_system', 'action_network:hidden', 'instructions', 'description']
 SUPER_GROUP = 'Indivisible'
+EVENT_TYPE = 'Group Meeting'
 
 #Headers
 _TITLE = 'title'
@@ -19,6 +21,12 @@ def save():
     translated_data = translate_data(cleaned_data)
     upload_data(translated_data)    
 
+def grab_data():
+    cleaned_data = retrieve_and_clean_data()
+    translated_data = translate_data(cleaned_data)
+    
+    return translated_data
+    
 def retrieve_and_clean_data():
     """
     We retrieve data through the API and URL given to us by the 
@@ -48,7 +56,7 @@ def retrieve_and_clean_data():
                 # remove private data
                 
                 if event["action_network:hidden"]:
-                    next
+                    continue
                     
                 for unneeded_key in UNNECESSARY_ELEMENTS:
                     if unneeded_key in event:
@@ -85,14 +93,18 @@ def translate_data(cleaned_data):
         has_coords = 'location' in data['location']
         
         if not has_coords:
-            next
-            
+            continue
+        
+        if data[_STARTDATE][:10] < datetime.date.today().strftime('%Y-%m-%d'):
+            print(data[_STARTDATE])
+            continue
+
         event = {
             'title': data[_TITLE] if _TITLE in data else None, 
             'url': data[_URL] if _URL in data else None,
             'supergroup' : SUPER_GROUP,
             'group': group_name,
-            'event_type': 'Group Meeting',
+            'event_type': EVENT_TYPE,
             'start_datetime': data[_STARTDATE] if _STARTDATE in data else None,
             'venue': address,
             'lat': data['location']['location']['latitude'] if has_coords else None,
