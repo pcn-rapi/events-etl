@@ -67,7 +67,7 @@ def retrieve_and_clean_data():
     
     response = urllib.urlopen(indivisible_url)
     with open('data/indivisible.csv', 'w') as f:
-        f.write(str(response.read().decode('utf-8'), encoding='utf-8', errors = 'ignore'))
+        f.write(response.read().decode('utf-8').encode('ascii', 'ignore'))
 
     # read indivisble
     indivisible_groups = []
