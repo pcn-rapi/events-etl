@@ -34,6 +34,7 @@ def retrieve_and_clean_data():
     defined in UNNECESSARY_ELEMENTS
     """
     
+    print(" -- Retrieving Indivisible Group Meetings")
     # start at page 1
     page = 1
     has_more_content = True
@@ -45,11 +46,14 @@ def retrieve_and_clean_data():
     # traverse the OSDI – only has 1
     while has_more_content:
         req = requests.get(event_endpoint, data={'page': page}, headers={"OSDI-API-Token": event_api_key})
+        print ("---- Going to Page", page, req.status_code)
+        
         page = page + 1
-        if (req.status_code == 200):
+        if req.status_code != 200:
+            raise ValueError("Error in retrieving ", req.status_code)
+        else:
             json_data = json.loads(req.text)
             osdi_events = json_data['_embedded']['osdi:events']
-            
             has_more_content = len(osdi_events) == OSDI_MAX_DATA_PER_PAGE
             
             for event in osdi_events:
@@ -85,6 +89,7 @@ def translate_data(cleaned_data):
     """
     This is where we translate the data to the necessary information for the map
     """
+    print(" -- Translating Indivisible Group Meetings")
     translated_data = []
     
     for data in cleaned_data:
@@ -96,7 +101,6 @@ def translate_data(cleaned_data):
             continue
         
         if data[_STARTDATE][:10] < datetime.date.today().strftime('%Y-%m-%d'):
-            print(data[_STARTDATE])
             continue
 
         event = {

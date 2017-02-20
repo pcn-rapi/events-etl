@@ -3,6 +3,11 @@ import requests
 import json
 import csv
 
+import boto
+from boto.s3.key import Key
+from boto.s3.connection import S3Connection
+import urllib
+
 #const 
 OSDI_MAX_DATA_PER_PAGE = 25
 UNNECESSARY_ELEMENTS = []
@@ -26,6 +31,19 @@ def grab_data():
     # print(translated_data)
     return translated_data
     
+# def get_files():
+#     print('Retrieving postal codes and indivisible group data')
+#     
+#     indivisible_aws_access_key = os.environ.get('INDIVISIBLE_AWS_ACCESS_KEY')
+#     indivisible_aws_secret_key = os.environ.get('INDIVISIBLE_AWS_SECRET_KEY')
+#     
+#     conn = S3Connection(aws_access_key_id=indivisible_aws_access_key, \
+#                         aws_secret_access_key=indivisible_aws_secret_key)
+#     
+#     
+#     k_indivisible = bucket.get_key('indivisible-data.csv')
+#     k_indivisible.get_contents_to_filename('data/indivisible.csv')
+    
 def retrieve_and_clean_data():
     """
     We retrieve data through the API and URL given to us by the 
@@ -33,26 +51,29 @@ def retrieve_and_clean_data():
     defined in UNNECESSARY_ELEMENTS
     """
     
+    # get_files()
+    
+    access_key = os.environ.get('AWS_ACCESS_KEY_ID')
+    indivisible_url = os.environ.get('INDIVISIBLE_GROUP_URL')
     # start at page 1
     us_postal = {}
-    with open('data/us_postal_codes.csv', 'r') as f:
+    with open('etl/common/us_postal_codes.csv', 'r') as f:
         csvreader = csv.DictReader(f)
         for row in csvreader:
             us_postal[row['zip']] = row
     f.closed
     
-    # 
-    # with open('data/indivisible.csv', 'r') as f:
-    #     indivisible = csv.reader(f)
-    # f.closed
-    
+    response = urllib.request.urlopen(indivisible_url)
+    with open('data/indivisible.csv', 'w') as f:
+        f.write(response.read().decode('utf-8'))
+
     # read indivisble
     indivisible_groups = []
     with open('data/indivisible.csv', 'r') as f:
         csvreader = csv.DictReader(f)
         for row in csvreader:
             group = row
-            zipcode = group['Zip code']
+            zipcode = group['Zip.code']
             
             while len(zipcode) < 5:
                 zipcode = '0' + zipcode
@@ -61,15 +82,14 @@ def retrieve_and_clean_data():
                 zipcode = zipcode[:5]
         
             if not zipcode in us_postal:
-                print (zipcode + ' does not exist')
                 continue
             else:
                 group['lat'] = us_postal[zipcode]['lat']
                 group['lng'] = us_postal[zipcode]['lon']
             
             indivisible_groups.append(group)
-        #endof row
-    f.closed
+            #endof row
+        # f.closed
     
     return indivisible_groups
 
@@ -83,28 +103,21 @@ def translate_data(cleaned_data):
     for data in cleaned_data:
         
         address = clean_venue(data)
-        group_name = data['Group Name'] if 'Group Name' in data else None
-        
-        website = data['website']
-        
-        if website is not None:
-            if not website.startswith('http'):
-                website = 'http://' + website
-                
-            if website.startswith('@'):
-                website = 'http://www.twitter.com/' + website
+        group_name = data['Group.Name'] if 'Group.Name' in data else None
 
         # the first one with a link wins!
+        url = None
         for link in [data['website'], data['facebook'], data['twitter']]:
             if link == '' or link is None:
                 continue
             url = link
             break
         
-        if url.startswith('@'):
+        if url is None:
+            url = 'mailto:' + data['email']
+        elif url is not None and url.startswith('@'):
             url = 'http://twitter.com/' + url
-        
-        if not url.startswith('http'):
+        elif url is not None and not url.startswith('http'):
             url = 'http://' + url
                     
         if 'lat' not in data:
@@ -115,7 +128,7 @@ def translate_data(cleaned_data):
             twitter = 'http://twitter.com/'+twitter if twitter.startswith('@') else twitter
         
         event = {
-            'title': data['Group Name'] if 'Group Name' in data else None, 
+            'title': data['Group.Name'] if 'Group.Name' in data else None, 
             'url': url,
             'supergroup' : SUPER_GROUP,
             'group': group_name,
@@ -141,7 +154,7 @@ def clean_venue(location):
     venue = None
     address = None
     locality = location['City'] if 'City' in location else None
-    region = location['State Abbreviated'] if 'State Abbreviated' in location else None
+    region = location['State.Abbreviated'] if 'State.Abbreviated' in location else None
     postal_code = None
     
     return ' '.join(['' if i is None else i for i in [venue, address, locality, region, postal_code]])
