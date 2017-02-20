@@ -164,7 +164,6 @@ def clean_venue(location):
     
 def upload_data(to_upload):
     
-    print (json.dumps(to_upload))
     access_key = os.environ.get('AWS_ACCESS_KEY_ID')
     secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
     
