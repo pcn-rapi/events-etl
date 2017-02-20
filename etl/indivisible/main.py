@@ -20,7 +20,7 @@ def run():
     
     # Locally Store Data
     with gzip.open('data/indivisible-data.js.gz', 'wb') as f:
-        f.write(str(content).encode('utf-8')))
+        f.write(str(content).encode('utf-8'))
         
     with open('data/indivisible.json', 'w') as f:
         f.write(content)
