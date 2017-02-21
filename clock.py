@@ -2,6 +2,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from etl.indivisible import main as indivisible
 
 
+
 sched = BlockingScheduler()
 
 @sched.scheduled_job('interval', minutes=60)
