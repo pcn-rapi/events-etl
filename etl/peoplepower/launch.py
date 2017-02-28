@@ -41,7 +41,6 @@ def retrieve_and_clean_data():
     
     cleaned_data = []
     
-    # traverse the ActionKit – only has 1
     while has_more_content:
         offset = page * _LIMIT
         req = requests.get(event_endpoint + ("?_offset=%d" % offset), data={'_limit': _LIMIT}, headers={"Access": 'application/json'})
