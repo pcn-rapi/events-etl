@@ -59,5 +59,9 @@ def run():
     paths = ['/output/*']
     inval_req = cloudfront.create_invalidation_request(u'EXFHJXIFH495H', paths)
 
+    #Delete all files
+    os.remove("data/indivisible-data.js.gz")
+    os.remove("data/indivisible.json")
+    os.remove("data/indivisible.csv")
 
 # Retrieve all data

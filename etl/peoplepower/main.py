@@ -54,5 +54,8 @@ def run():
     paths = ['/output/*']
     inval_req = cloudfront.create_invalidation_request(u'EXFHJXIFH495H', paths)
 
+    os.remove("data/peoplepower.js.gz")
+    os.remove("data/peoplepower.json")
+
 
 # Retrieve all data
