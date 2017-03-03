@@ -1,3 +1,5 @@
+# encoding=utf8
+
 from etl.peoplepower import launch as peoplepower_launch
 
 from boto.s3.connection import S3Connection
