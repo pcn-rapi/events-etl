@@ -65,9 +65,9 @@ def retrieve_and_clean_data():
             us_postal[row['zip']] = row
     f.closed
     
-    response = urllib.urlopen(indivisible_url)
+    response = urllib.request.urlopen(indivisible_url)
     with open('data/indivisible.csv', 'w') as f:
-        f.write(response.read().decode('utf-8').encode('ascii', 'ignore'))
+        f.write(str(response.read()))
 
     # read indivisble
     indivisible_groups = []
