@@ -17,7 +17,7 @@ def run():
     
     # Locally Store Data
     with gzip.open('data/peoplepower.js.gz', 'wb') as f:
-        f.write(bytes(content, 'utf-8'))
+        f.write(str(content))
         
     with open('data/peoplepower.json', 'w') as f:
         f.write(raw)
