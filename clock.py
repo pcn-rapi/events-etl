@@ -17,5 +17,11 @@ def timed_job():
         peoplepower.run()
     except ValueError as error:
         print('Caught this error: ' + repr(error))
-    
+
+
+try:
+    peoplepower.run()
+except ValueError as error:
+    print('Caught this error: ' + repr(error))
+
 sched.start()
