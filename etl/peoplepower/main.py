@@ -12,7 +12,7 @@ import gzip
 
 def queue():
     try:
-        peoplepower.run()
+        run()
     except ValueError as error:
         print('Caught this error: ' + repr(error))
         
