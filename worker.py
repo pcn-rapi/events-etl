@@ -3,6 +3,7 @@ import os
 
 import redis
 from rq import Worker, Queue, Connection
+from etl.peoplepower import main as peoplepower
 
 listen = ['high', 'default', 'low']
 
