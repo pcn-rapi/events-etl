@@ -9,12 +9,6 @@ import boto
 import os
 import json
 import gzip    
-
-def queue():
-    try:
-        run()
-    except ValueError as error:
-        print('Caught this error: ' + repr(error))
         
 def run():
     data = peoplepower_launch.grab_data()
@@ -67,3 +61,10 @@ def run():
 
 
 # Retrieve all data
+
+
+def queue():
+    try:
+        run()
+    except ValueError as error:
+        print('Caught this error: ' + repr(error))
