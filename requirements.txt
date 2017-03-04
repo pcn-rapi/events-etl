@@ -6,3 +6,5 @@ Django==1.11a1
 whitenoise==3.3.0
 psycopg2
 gunicorn
+rq
+redis
