@@ -59,7 +59,6 @@ def retrieve_and_clean_data():
                 # remove private data
                 
                 if not event["is_approved"]:
-                    print("Event is not approved")
                     continue
                     
                 if not event["status"] == "active":
