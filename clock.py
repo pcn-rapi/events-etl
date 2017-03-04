@@ -9,9 +9,9 @@ from worker import conn
 q = Queue(connection=conn)
 sched = BlockingScheduler()
 
-@sched.scheduled_job('interval', minutes=1)
+@sched.scheduled_job('interval', minutes=60)
 def timed_job():
-    print(' This job runs every 3 minutes')
+    print(' This job runs every 60 minutes')
     result = q.enqueue(peoplepower.queue)
 
 sched.start()
