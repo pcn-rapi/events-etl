@@ -13,5 +13,7 @@ def timed_job():
     print(' This job runs every 60 minutes')
     q = Queue(connection=conn)
     result = q.enqueue(peoplepower.queue)
+    print('Result is %d ' result)
+    result = q.enqueue(indivisible.queue)
 
 sched.start()

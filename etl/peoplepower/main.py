@@ -1,6 +1,7 @@
 # encoding=utf8
 
 from etl.peoplepower import launch as peoplepower_launch
+from etl.peoplepower import action as peoplepower_action
 
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
@@ -11,7 +12,7 @@ import json
 import gzip    
         
 def run():
-    data = peoplepower_launch.grab_data()
+    data = peoplepower_action.grab_data()
     raw = json.dumps(data)
     content = 'window.PEOPLEPOWER_EVENTS=' + json.dumps(data)
     
@@ -64,7 +65,4 @@ def run():
 
 
 def queue():
-    try:
-        run()
-    except ValueError as error:
-        print('Caught this error: ' + repr(error))
+    run()

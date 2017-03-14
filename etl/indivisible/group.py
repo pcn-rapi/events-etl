@@ -28,9 +28,10 @@ def save():
 
 def grab_data():
     cleaned_data = retrieve_and_clean_data()
+    print(cleaned_data)
     translated_data = translate_data(cleaned_data)
     
-    # print(translated_data)
+    print(translated_data)
     return translated_data
     
 # def get_files():
@@ -66,8 +67,9 @@ def retrieve_and_clean_data():
     f.closed
     
     response = urllib.request.urlopen(indivisible_url)
-    with open('data/indivisible.csv', 'w') as f:
-        f.write(str(response.read()))
+    
+    with open('data/indivisible.csv', 'wb') as f:
+        f.write(response.read())
 
     # read indivisble
     indivisible_groups = []
@@ -75,7 +77,7 @@ def retrieve_and_clean_data():
         csvreader = csv.DictReader(f)
         for row in csvreader:
             group = row
-            zipcode = group['Zip.code']
+            zipcode = group['zip']
             
             while len(zipcode) < 5:
                 zipcode = '0' + zipcode

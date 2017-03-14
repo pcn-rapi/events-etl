@@ -48,7 +48,7 @@ def retrieve_and_clean_data():
     # traverse the OSDI – only has 1
     while has_more_content:
         req = requests.get(event_endpoint, data={'page': page}, headers={"OSDI-API-Token": event_api_key})
-        print ("---- Going to Page", page, req.status_code)
+        print ("---- X Going to Page", page, req.status_code)
         
         page = page + 1
         if req.status_code != 200:

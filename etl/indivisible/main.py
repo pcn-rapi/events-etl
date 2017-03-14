@@ -65,3 +65,5 @@ def run():
     os.remove("data/indivisible.csv")
 
 # Retrieve all data
+def queue():
+    run()
