@@ -8,7 +8,7 @@ from worker import conn
 
 sched = BlockingScheduler()
 
-@sched.scheduled_job('interval', minutes=60)
+@sched.scheduled_job('interval', minutes=15)
 def timed_job():
     print(' This job runs every 60 minutes')
     q = Queue(connection=conn)
