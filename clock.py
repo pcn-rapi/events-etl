@@ -2,6 +2,7 @@
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 from etl.peoplepower import main as peoplepower
+from etl.indivisible import main as indivisible
 
 from rq import Queue
 from worker import conn
