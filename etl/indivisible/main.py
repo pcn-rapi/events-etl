@@ -54,7 +54,7 @@ def run():
     key.set_acl('public-read')
     
     # Cloudfront Invalidation requests
-    print("Invalidating Output")
+    print("Invalidating Indivisible Output")
     cloudfront = boto.connect_cloudfront()
     paths = ['/output/*']
     inval_req = cloudfront.create_invalidation_request(u'EXFHJXIFH495H', paths)

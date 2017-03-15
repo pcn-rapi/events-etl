@@ -10,12 +10,15 @@ from worker import conn
 sched = BlockingScheduler()
 
 @sched.scheduled_job('interval', minutes=5)
-def timed_job():
-    print(' This job runs every 60 minutes')
+def timed_for_aclu():
+    print('Running Job for ACLU')
     q = Queue(connection=conn)
     result = q.enqueue(peoplepower.queue)
-    print('Result is %d ' % result)
-    result2 = q.enqueue(indivisible.queue)
-    print('Result2 is %d ' % result2)
+
+@sched.scheduled_job('interval', minutes=5)
+def timed_for_indivisible():
+    print('Running Job for Indivisible')
+    q = Queue(connection=conn)
+    result = q.enqueue(indivisible.queue)
 
 sched.start()
