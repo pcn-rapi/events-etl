@@ -28,10 +28,8 @@ def save():
 
 def grab_data():
     cleaned_data = retrieve_and_clean_data()
-    print(cleaned_data)
     translated_data = translate_data(cleaned_data)
     
-    print(translated_data)
     return translated_data
     
 # def get_files():

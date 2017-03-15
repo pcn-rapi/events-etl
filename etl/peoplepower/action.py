@@ -72,7 +72,6 @@ def retrieve_and_clean_data():
                         del event[unneeded_key]
                 # print("\n\n")
                 total_signups = total_signups + event['attendee_count']
-                print("Signup atm: %d" % total_signups)
                 cleaned_data.append(event)
             
             # will continue to traverse if has more content
