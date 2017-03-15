@@ -64,7 +64,7 @@ def retrieve_and_clean_data():
             us_postal[row['zip']] = row
     f.closed
     
-    response = urllib.request.urlopen(indivisible_url)
+    response = urllib.urlopen(indivisible_url)
     
     with open('data/indivisible.csv', 'wb') as f:
         f.write(response.read())
