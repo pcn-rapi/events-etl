@@ -11,14 +11,14 @@ UNNECESSARY_ELEMENTS = ['campaign', 'confirmed_at', 'created_at', 'creator', 'di
                         'note_to_attendees', 'notes', 'phone', 'plus4', 'updated_at'\
                         ]
 SUPER_GROUP = 'PeoplePower'
-EVENT_TYPE = 'Launch'
+EVENT_TYPE = 'Action'
 
 #Headers
 _TITLE = 'title'
 _URL = 'browser_url'
 _STARTDATE = 'starts_at'
 
-_PREURL = "https://go.peoplepower.org/event/launch/"
+_PREURL = "https://go.peoplepower.org/event/action/"
 _LIMIT = 20
 
 def grab_data():
@@ -34,11 +34,11 @@ def retrieve_and_clean_data():
     defined in UNNECESSARY_ELEMENTS
     """
     
-    print(" -- Retrieving ACLU People Power Launches")
+    print(" -- Retrieving ACLU People Power Action")
     # start at page 1
     page = 1
     has_more_content = True
-    event_endpoint = os.environ.get('PEOPLEPOWER_LAUNCH_URL')
+    event_endpoint = os.environ.get('PEOPLEPOWER_ACTION_URL')
     
     cleaned_data = []
     
@@ -46,10 +46,11 @@ def retrieve_and_clean_data():
     
     while has_more_content:
         offset = page * _LIMIT
-        req = requests.get(event_endpoint + ("?_offset=%d" % offset), data={'_limit': _LIMIT}, headers={"Access": 'application/json'})
+        req = requests.get(event_endpoint + ("&_offset=%d" % offset), data={'_limit': _LIMIT}, headers={"Access": 'application/json'})
         print ("---- Going to Page", page, offset, req.status_code)
         
         page = page + 1
+        print (req)
         if req.status_code != 200:
             raise ValueError("Error in retrieving ", req.status_code)
         else:
@@ -83,7 +84,7 @@ def translate_data(cleaned_data):
     """
     This is where we translate the data to the necessary information for the map
     """
-    print(" -- Translating People Power Launch")
+    print(" -- Translating People Power Action")
     translated_data = []
     
     for data in cleaned_data:

@@ -1,3 +1,5 @@
+# encoding=utf8
+
 import os
 import requests
 import json
@@ -28,7 +30,6 @@ def grab_data():
     cleaned_data = retrieve_and_clean_data()
     translated_data = translate_data(cleaned_data)
     
-    # print(translated_data)
     return translated_data
     
 # def get_files():
@@ -63,9 +64,10 @@ def retrieve_and_clean_data():
             us_postal[row['zip']] = row
     f.closed
     
-    response = urllib.request.urlopen(indivisible_url)
-    with open('data/indivisible.csv', 'w') as f:
-        f.write(response.read().decode('utf-8'))
+    response = urllib.urlopen(indivisible_url)
+    
+    with open('data/indivisible.csv', 'wb') as f:
+        f.write(response.read())
 
     # read indivisble
     indivisible_groups = []
@@ -73,7 +75,7 @@ def retrieve_and_clean_data():
         csvreader = csv.DictReader(f)
         for row in csvreader:
             group = row
-            zipcode = group['Zip.code']
+            zipcode = group['zip']
             
             while len(zipcode) < 5:
                 zipcode = '0' + zipcode
@@ -162,7 +164,6 @@ def clean_venue(location):
     
 def upload_data(to_upload):
     
-    print (json.dumps(to_upload))
     access_key = os.environ.get('AWS_ACCESS_KEY_ID')
     secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
     

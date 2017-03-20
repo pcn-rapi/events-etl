@@ -1,3 +1,4 @@
+# encoding=utf8
 import os
 import requests
 import json
@@ -106,7 +107,6 @@ def translate_data(cleaned_data):
         
         # Check if event is in the future
         if data[_STARTDATE][:10] < datetime.date.today().strftime('%Y-%m-%d'):
-            print(data[_STARTDATE])
             continue
             
         event = {
@@ -129,7 +129,6 @@ def clean_venue(location):
     """
     We translate the venue information to a flat structure
     """
-    print(location['address_lines'])
     venue = location['venue'] + '.' if 'venue' in location else None
     address = ''.join(location['address_lines']) if 'address_lines' in location else None
     locality = location['locality'] if 'locality' in location else None

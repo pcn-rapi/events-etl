@@ -20,7 +20,7 @@ def run():
     
     # Locally Store Data
     with gzip.open('data/indivisible-data.js.gz', 'wb') as f:
-        f.write(bytes(content, 'utf-8'))
+        f.write(str(content).encode('utf-8'))
         
     with open('data/indivisible.json', 'w') as f:
         f.write(content)
@@ -54,7 +54,7 @@ def run():
     key.set_acl('public-read')
     
     # Cloudfront Invalidation requests
-    print("Invalidating Output")
+    print("Invalidating Indivisible Output")
     cloudfront = boto.connect_cloudfront()
     paths = ['/output/*']
     inval_req = cloudfront.create_invalidation_request(u'EXFHJXIFH495H', paths)
@@ -65,3 +65,5 @@ def run():
     os.remove("data/indivisible.csv")
 
 # Retrieve all data
+def queue():
+    run()

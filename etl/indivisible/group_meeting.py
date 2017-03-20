@@ -1,3 +1,5 @@
+# encoding=utf8
+
 import os
 import requests
 import json
@@ -46,7 +48,7 @@ def retrieve_and_clean_data():
     # traverse the OSDI – only has 1
     while has_more_content:
         req = requests.get(event_endpoint, data={'page': page}, headers={"OSDI-API-Token": event_api_key})
-        print ("---- Going to Page", page, req.status_code)
+        print ("---- X Going to Page", page, req.status_code)
         
         page = page + 1
         if req.status_code != 200:
@@ -123,7 +125,6 @@ def clean_venue(location):
     """
     We translate the venue information to a flat structure
     """
-    print(location['address_lines'])
     venue = location['venue'] + '.' if 'venue' in location else None
     address = ''.join(location['address_lines']) if 'address_lines' in location else None
     locality = location['locality'] if 'locality' in location else None
@@ -135,7 +136,6 @@ def clean_venue(location):
     
 def upload_data(to_upload):
     
-    print (json.dumps(to_upload))
     access_key = os.environ.get('AWS_ACCESS_KEY_ID')
     secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
     

@@ -1,4 +1,7 @@
+# encoding=utf8
+
 from etl.peoplepower import launch as peoplepower_launch
+from etl.peoplepower import action as peoplepower_action
 
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
@@ -7,15 +10,15 @@ import boto
 import os
 import json
 import gzip    
-
+        
 def run():
-    data = peoplepower_launch.grab_data()
+    data = peoplepower_action.grab_data()
     raw = json.dumps(data)
     content = 'window.PEOPLEPOWER_EVENTS=' + json.dumps(data)
     
     # Locally Store Data
     with gzip.open('data/peoplepower.js.gz', 'wb') as f:
-        f.write(bytes(content, 'utf-8'))
+        f.write(str(content).encode('utf-8'))
         
     with open('data/peoplepower.json', 'w') as f:
         f.write(raw)
@@ -49,7 +52,7 @@ def run():
     key.set_acl('public-read')
     
     # Cloudfront Invalidation requests
-    print("Invalidating Output")
+    print("Invalidating ACLU Output")
     cloudfront = boto.connect_cloudfront()
     paths = ['/output/*']
     inval_req = cloudfront.create_invalidation_request(u'EXFHJXIFH495H', paths)
@@ -59,3 +62,7 @@ def run():
 
 
 # Retrieve all data
+
+
+def queue():
+    run()
