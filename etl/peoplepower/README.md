@@ -8,7 +8,7 @@ Setup buckets in `etl/peoplepower/main.py`
 
 Checkout `http://peoplepower.actionkit.com/rest/v1` for more info
 
-## Indivisible 
+## ENV VARS 
 
 
 | key | description |
