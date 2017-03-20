@@ -36,7 +36,7 @@ def retrieve_and_clean_data():
     
     print(" -- Retrieving ACLU People Power Action")
     # start at page 1
-    page = 1
+    page = 0
     has_more_content = True
     event_endpoint = os.environ.get('PEOPLEPOWER_ACTION_URL')
     
